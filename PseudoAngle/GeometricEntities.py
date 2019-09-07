@@ -36,6 +36,16 @@ class Point(object):
     def isColinear(self, p1: Type[Point], p2: Type[Point]):
         return ((p2.getY() - p1.getY()) * (p1.getX() - self._x) == (p1.getY() - self._y) * (p2.getX() - p1.getX()))
 
+    def findOrientation(self, p1: Type[Point], p2: Type[Point]) -> int:
+        px, py = self._x, self._y
+        qx, qy = p1.getX(), p1.getY()
+        rx, ry = p2.getX(), p2.getY()
+        val = ((qy - py) * (rx - qx)) - ((qx - px) * (ry - qy))
+
+        if (val == 0):
+            return 0
+        return -1 if (val > 0) else 1
+
 
 class Vector(object):
     def __init__(self, i: float, j: float) -> None:
@@ -51,32 +61,3 @@ class Vector(object):
 
     def getComponents(self):
         return (self._i, self._j)
-
-
-class Circle(object):
-    def __init__(self, center: Type[Point], radius: float) -> None:
-        self._center = center
-        self._radius = radius
-
-    def setCenter(self, c: Point) -> None:
-        self._center = c
-
-    def setRadius(self, r: float) -> float:
-        self._radius = r
-
-    def varyRadius(self, v: float) -> None:
-        self._radius += v
-
-    def getRadius(self) -> float:
-        return self._radius
-
-    def getCenter(self) -> Type[Point]:
-        return self._center
-
-    def isPointInside(self, p: Type[Point]) -> bool:
-        return p.distanceToPointSquared(self._center) <= self._radius**2
-
-    def moveCenter(self, distance: float, direction: Type[Vector]) -> None:
-        unit_vector = direction.getUnitVector().getComponents()
-        self._center = Point(self._center.getX(
-        ) + distance * unit_vector[0], self._center.getY() + distance * unit_vector[1])

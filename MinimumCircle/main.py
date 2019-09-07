@@ -8,10 +8,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy
 import datetime
-import os
 
-print(os.getcwd())
-data = pd.read_csv('MinimumCircle/points.txt', sep="   ", header=None, engine='python', names=['x', 'y'])
+data = pd.read_csv('MinimumCircle/points.txt', sep="   ",
+                   header=None, engine='python', names=['x', 'y'])
 
 points = []
 for i in range(data.shape[0]):
@@ -20,11 +19,15 @@ for i in range(data.shape[0]):
 approximate_minimum_circle = ApproximateMinimumCircle(points[:])
 minimum_circle = MinimumCircle(points[:])
 
-print("Círculo Aproximado: ", approximate_minimum_circle.getCenter().getCoordinates(), approximate_minimum_circle.getRadius())
-print("Círculo: ", minimum_circle.getCenter().getCoordinates(), minimum_circle.getRadius())
+print("Círculo Aproximado: ", approximate_minimum_circle.getCenter(
+).getCoordinates(), approximate_minimum_circle.getRadius())
+print("Círculo: ", minimum_circle.getCenter(
+).getCoordinates(), minimum_circle.getRadius())
 
-approximate_min_circle_plot = plt.Circle(approximate_minimum_circle.getCenter().getCoordinates(), radius=approximate_minimum_circle.getRadius(), fill=False, color='r')
-min_circle_plot = plt.Circle(minimum_circle.getCenter().getCoordinates(), radius=minimum_circle.getRadius(), fill=False)
+approximate_min_circle_plot = plt.Circle(approximate_minimum_circle.getCenter(
+).getCoordinates(), radius=approximate_minimum_circle.getRadius(), fill=False, color='r')
+min_circle_plot = plt.Circle(minimum_circle.getCenter(
+).getCoordinates(), radius=minimum_circle.getRadius(), fill=False)
 
 plt.scatter(data['x'], data['y'])
 fig = plt.gcf()
@@ -35,6 +38,7 @@ plt.xlim((100, 700))
 plt.ylim((100, 500))
 ax.set_aspect('equal')
 plt.show()
+
 
 def CompareRunTimes():
 
@@ -48,7 +52,7 @@ def CompareRunTimes():
         random_points = []
         for j in range(i):
             random_points.append(Point(randrange(0, 1000), randrange(0, 1000)))
-        
+
         start_time = datetime.datetime.now()
         ApproximateMinimumCircle(random_points[:])
         finish_time = datetime.datetime.now()
@@ -74,6 +78,3 @@ def CompareRunTimes():
     plt.show()
 
 # CompareRunTimes()
-
-  
-
