@@ -61,6 +61,10 @@ class Vector(object):
 
     def getComponents(self):
         return (self._i, self._j)
+    
+    def crossProduct(self, v: Type[Vector]) -> float:
+        (vi, vj) = v.getComponents()
+        return self._i * vj - self._j * vi
 
 
 class LineSegment(object):

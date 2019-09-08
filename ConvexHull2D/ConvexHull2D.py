@@ -14,6 +14,7 @@ def ConvexHull2D(points_list: Type[List[Point]]) -> Type[List[Point]]:
         points_list[1:],
         key=lambda p: (PseudoAnglePoints(points_list[0], p), points_list[0].distanceToPointSquared(p)))
 
+    ## Removes points that are colinear.
     points_list_no_colinear = points_list[:]
     for i in range(1, len(points_list) - 1):
         if points_list[0].isColinear(points_list[i], points_list[i + 1]):
@@ -27,6 +28,7 @@ def ConvexHull2D(points_list: Type[List[Point]]) -> Type[List[Point]]:
     convex_hull = []
     convex_hull.extend(points_list[0:3])
 
+    ## Check for orientation change.
     for p in points_list[3:]:
         while (convex_hull[-2].findOrientation(convex_hull[-1], p) == -1):
             convex_hull.pop()

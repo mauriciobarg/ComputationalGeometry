@@ -3,7 +3,7 @@ from typing import Type
 from GeometricEntities import Point, Vector
 
 
-def PseudoAnglePoints(p1: Type[Point], p2: Type[Point]) -> int:
+def PseudoAnglePoints(p1: Type[Point], p2: Type[Point]) -> float:
     (i, j) = p2.getVectorToPoint(p1).getComponents()
     (abs_i, abs_j) = abs(i), abs(j)
     if i == j == 0:
@@ -32,7 +32,7 @@ def PseudoAnglePoints(p1: Type[Point], p2: Type[Point]) -> int:
                 return 8 - abs_j / abs_i
 
 
-def PseudoAngleVector(v: Type[Vector]) -> int:
+def PseudoAngleVector(v: Type[Vector]) -> float:
     (i, j) = v.getComponents()
     (abs_i, abs_j) = abs(i), abs(j)
     if i == j == 0:
@@ -59,3 +59,4 @@ def PseudoAngleVector(v: Type[Vector]) -> int:
                 return 6 + abs_i / abs_j
             else:
                 return 8 - abs_j / abs_i
+

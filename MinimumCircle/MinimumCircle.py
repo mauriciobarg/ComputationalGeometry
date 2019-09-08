@@ -9,7 +9,7 @@ def MinimumCircle(points_list: List[Type[Point]], other_points: List[Type[Point]
     else:
         shuffle(points_list)
         points_list.extend(other_points)
-
+    ## Base Cases
     if (len(points_list) == 0):
         return None
 
@@ -57,6 +57,7 @@ def MinimumCircle(points_list: List[Type[Point]], other_points: List[Type[Point]
 
                 return Circle(center, center.distanceToPoint(points_list[0]))
 
+    ## More than three points
     else:
         minimum_circle = None
         if (len(other_points) == 0):
