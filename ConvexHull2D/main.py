@@ -4,9 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-data_nuvem1 = pd.read_csv('ConvexHull2D/nuvem1.txt', sep="   ",
+data_nuvem1 = pd.read_csv('nuvem1.txt', sep="   ",
                           header=None, engine='python', names=['x', 'y'])
-data_nuvem2 = pd.read_csv('ConvexHull2D/nuvem2.txt', sep="   ",
+data_nuvem2 = pd.read_csv('nuvem2.txt', sep="   ",
                           header=None, engine='python', names=['x', 'y'])
 
 points_nuvem1 = []
