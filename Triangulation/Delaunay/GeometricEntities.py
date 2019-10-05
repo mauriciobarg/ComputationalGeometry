@@ -1,13 +1,18 @@
 from __future__ import annotations
 from typing import Type, List, Tuple
 from math import sqrt
-from MinimumCircle import MinimumCircle
 
 
 class Point(object):
     def __init__(self, x: float, y: float) -> None:
         self._x = x
         self._y = y
+
+    def __repr__(self):
+        return "(" + str(self._x) + ", " + str(self._y) + ")"
+
+    def __eq__(self, other: Type[Point]) -> bool:
+        return self._x == other.getX() and self._y == other.getY()
 
     def getX(self) -> float:
         return self._x
@@ -72,12 +77,27 @@ class LineSegment(object):
     def __init__(self, p1: Type[Point], p2: Type[Point]) -> None:
         self._p1 = p1
         self._p2 = p2
+    
+    def __repr__(self):
+        return "(" + str(self._p1) + ", " + str(self._p2) + ")"
+    
+    def __eq__(self, other: Type[LineSegment]):
+        return self._p1 == other.getP1() and self._p2 == other.getP2()
 
     def getP1(self) -> Type[Point]:
         return self._p1
 
     def getP2(self) -> Type[Point]:
         return self._p2
+
+    def getPoints(self) -> Type[Tuple[Point]]:
+        return (self._p1, self._p2)
+    
+    def getReversePoints(self, create_segment=False) -> Type[Tuple[Point]]:
+        if create_segment:
+            return LineSegment(self._p2, self._p1)
+
+        return (self._p2, self._p1)
 
     def checkInLine(self, p: Type[Point]) -> bool:
         px, py = p.getX(), p.getY()
@@ -126,30 +146,65 @@ class Polygon(object):
                 return self._sides.index(side)
 
 
-class Triangle(object):
-    def __init__(self, v0: Point, v1: Point, v2: Point) -> None:
-        self._v0 = v0
-        self._v1 = v1
-        self._v2 = v2
-        self._neighbors = [None]*3
+class Triangle(Polygon):
+
+    def __init__(self, vertices: Type[List[Point]]) -> None:
+        Polygon.__init__(self, vertices)
+        self._neighbors = [None] * 3
+        self.organizeSides()
+
+    def __repr__(self):
+        return "(" + str(self._sides[0]) + "; " + str(self._sides[1]) + "; " + str(self._sides[2]) + ")"
     
+    def __eq__(self, other: Type[Triangle]) -> bool:
+        if other:
+            return not [vertex for vertex in self._vertices if vertex not in list(other.getVertices())]
+            # return self._vertices == list(other.getVertices())
+        
+        return False
+
+    def organizeSides(self) -> None:
+        ordered_sides = [None] * 3
+        for side in self._sides:
+            ordered_sides[self._vertices.index([vertex for vertex in self._vertices if vertex not in list(side.getPoints())][0])] = side
+
+        self._sides = ordered_sides
     def getVertices(self) ->  Type[Tuple[Point]]:
-        return (self._v0, self._v1, self._v2)
+        return (self._vertices[0], self._vertices[1], self._vertices[2])
 
     def isPointInside(self, p: Point) -> bool:
-        side1 = p.findOrientation(self._v0, self._v1)
-        side2 = p.findOrientation(self._v1, self._v2)
-        side3 = p.findOrientation(self._v2, self._v0)
+        side1 = p.findOrientation(self._vertices[0], self._vertices[1])
+        side2 = p.findOrientation(self._vertices[1], self._vertices[2])
+        side3 = p.findOrientation(self._vertices[2], self._vertices[0])
         
-        return (side1 == 1) and (side2 == 2) and (side3 == 1)
+        return (side1 == 1) and (side2 == 1) and (side3 == 1)
     
     def isPointInsideCircumcircle(self, p: Point) -> bool:
-        circumcircle = MinimumCircle([self._v0, self._v1, self._v2])
+        from MinimumCircle import MinimumCircle
+        circumcircle = MinimumCircle(self._vertices)
         return circumcircle.isPointInside(p)
+
+    def getNeighbor(self, index = None) -> Type[Triangle]:
+        if index != None:
+            return self._neighbors[index]
+        
+        return self._neighbors
     
-    def setNeighbor(self, t: Type[Triangle], oppositeVertex: int) -> None:
-        self._neighbors[oppositeVertex] = t
-    
+    def setNeighbor(self, t: Type[Triangle], oppositeVertex: int = None) -> None:
+        if t:
+            if oppositeVertex != None:
+                self._neighbors[oppositeVertex] = t
+            else:
+                other_sides = t.getSides()
+                for side in self._sides:
+                    reversed_side = side.getReversePoints(create_segment=True)
+                    if reversed_side in other_sides:
+                        oppositeVertex = self._sides.index(side)
+                        #oppositeVertex = self._vertices.index([vertex for vertex in self._vertices if vertex not in list(side.getPoints())][0])
+
+                if oppositeVertex != None:
+                    self._neighbors[oppositeVertex] = t
+        return
 
 class Circle(object):
     def __init__(self, center: Type[Point], radius: float) -> None:

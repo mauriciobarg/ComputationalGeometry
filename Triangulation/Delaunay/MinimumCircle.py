@@ -2,7 +2,6 @@ from GeometricEntities import Point, Circle
 from typing import Type, List
 from random import shuffle
 
-
 def MinimumCircle(points_list: List[Type[Point]], other_points: List[Type[Point]] = []) -> Type[Circle]:
     if len(other_points) > 2:
         return None
